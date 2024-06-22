@@ -463,25 +463,25 @@ NSString *const errorMethod = @"error";
 
 - (BOOL)setCaptureSessionPreset:(FCPPlatformResolutionPreset)resolutionPreset
                       withError:(NSError **)error {
-  switch (resolutionPreset) {
-    case FCPPlatformResolutionPresetMax: {
-      AVCaptureDeviceFormat *bestFormat =
-          [self highestResolutionFormatForCaptureDevice:_captureDevice];
-      if (bestFormat) {
-        _videoCaptureSession.sessionPreset = AVCaptureSessionPresetInputPriority;
-        if ([_captureDevice lockForConfiguration:NULL]) {
-          // Set the best device format found and finish the device configuration.
-          _captureDevice.activeFormat = bestFormat;
-          [_captureDevice unlockForConfiguration];
+      switch (resolutionPreset) {
+        case FCPPlatformResolutionPresetMax: {
+          AVCaptureDeviceFormat *bestFormat =
+              [self highestResolutionFormatForCaptureDevice:_captureDevice];
+          if (bestFormat) {
+            _videoCaptureSession.sessionPreset = AVCaptureSessionPresetInputPriority;
+            if ([_captureDevice lockForConfiguration:NULL]) {
+              // Set the best device format found and finish the device configuration.
+              _captureDevice.activeFormat = bestFormat;
+              [_captureDevice unlockForConfiguration];
 
-          // Set the preview size based on values from the current capture device.
-          _previewSize =
-              CGSizeMake(_captureDevice.activeFormat.highResolutionStillImageDimensions.width,
-                         _captureDevice.activeFormat.highResolutionStillImageDimensions.height);
-          break;
+              // Set the preview size based on values from the current capture device.
+              _previewSize =
+                  CGSizeMake(_captureDevice.activeFormat.highResolutionStillImageDimensions.width,
+                             _captureDevice.activeFormat.highResolutionStillImageDimensions.height);
+              break;
+            }
+          }
         }
-      }
-    }
     case FCPPlatformResolutionPresetUltraHigh:
       if ([_videoCaptureSession canSetSessionPreset:AVCaptureSessionPreset3840x2160]) {
         _videoCaptureSession.sessionPreset = AVCaptureSessionPreset3840x2160;
